@@ -8,14 +8,19 @@ package com.example.apps.sso.config;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 
 /**
- * Spring Security 初期設定クラス.
+ * Spring Security サーブレットコンテナ初期化処理.
+ * <ul>
+ * <li>ContextLoaderListenerをサーブレットコンテナに登録する</li>
+ * <li>Spring Securityのサーブレットフィルタクラスをサーブレットコンテナに登録する処理</li>
+ * </ul>
+ *
  * @author sano
  */
 public final class SecurityWebApplicationInitializer extends AbstractSecurityWebApplicationInitializer {
 
     /**
      * コンストラクタ.
-    */
+     */
     public SecurityWebApplicationInitializer() {
         super(WebSecurityConfig.class);
     }

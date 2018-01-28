@@ -12,6 +12,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 /**
+ * Spring Security コンフィグレーションクラス.
+ * <p>引数の型が異なる3つのconfigureメソッドでSpring Securityを定義する.</p>
+ * <ul>
+ * <li>引数の型WebSecurityクラス<ul>
+ * <li>Spring Security 適用しないリソースの定義</li>
+ * <li>Spring Security デバッグ</li>
+ * </ul>
+ * </li>
+ * </ul>
  *
  * @author sano
  */
