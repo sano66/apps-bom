@@ -11,7 +11,7 @@ import org.springframework.security.web.context.AbstractSecurityWebApplicationIn
  * Spring Security 初期設定クラス.
  * @author sano
  */
-public class SecurityWebApplicationInitializer extends AbstractSecurityWebApplicationInitializer {
+public final class SecurityWebApplicationInitializer extends AbstractSecurityWebApplicationInitializer {
 
     /**
      * コンストラクタ.
