@@ -15,9 +15,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  * Spring Security コンフィグレーションクラス.
  * <p>引数の型が異なる3つのconfigureメソッドでSpring Securityを定義する.</p>
  * <ul>
- * <li>引数の型WebSecurityクラス<ul>
+ * <li>configure() 引数の型WebSecurityクラス<ul>
  * <li>Spring Security 適用しないリソースの定義</li>
  * <li>Spring Security デバッグ</li>
+ * </ul>
+ * </li>
+ * <li>configure() 引数の型HttpSecurityクラス<ul>
+ * <li>認証対象のページとアクセスするためのROLEの定義</li>
  * </ul>
  * </li>
  * </ul>
