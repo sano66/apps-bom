@@ -27,6 +27,16 @@
 1. configure(WebSecurity)の定義
 1. configure(HttpSecurity)の定義
 
+## Step 2
+
+1. シングルサインオンでhttpヘッダーにSSO_USERが付与されている。
+
+### point
+
+1. リクエストヘッダーを検査するフィルタの登録
+1. 上記フィルタで使用するtokenに応じた認証プロバイダの登録
+1. フィルタが設定するtoken.detailはGrantedAuthorityを実装していること
+
 ## 利用規約
 
 誤りがあれば遠慮なくご指摘ください。
