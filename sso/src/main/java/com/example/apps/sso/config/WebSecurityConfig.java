@@ -54,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * 認証を適用しないリソースの登録およびデバッグの指示.
      *
      * @param web WebSecurity
-     * @throws Exception
+     * @throws Exception exception
      */
     @Override
     public void configure(final WebSecurity web) throws Exception {
@@ -66,7 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * 認証の定義.
      *
      * @param http HttpSecurity
-     * @throws Exception
+     * @throws Exception exception
      */
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
@@ -80,7 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * フィルタが使用するtokenに応じた認証プロバイダの登録.
      *
      * @param auth AuthenticationManagerBuilder
-     * @throws Exception
+     * @throws Exception exception
      */
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
