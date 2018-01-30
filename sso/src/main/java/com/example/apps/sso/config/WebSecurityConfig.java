@@ -126,7 +126,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     WebAuthenticationDetailsSource webAuthenticationDetailsSource() {
         WebAuthenticationDetailsSource detailsSource = new WebAuthenticationDetailsSource() {
             private final List<GrantedAuthority> authorities
-                    = new ArrayList<>(Arrays.asList(new SimpleGrantedAuthority("ROLE_AUTHENTICATED")));
+                    = new ArrayList<>(Arrays.asList(new SimpleGrantedAuthority("ANONYMOUS")));
 
             @Override
             public WebAuthenticationDetails buildDetails(final HttpServletRequest context) {
