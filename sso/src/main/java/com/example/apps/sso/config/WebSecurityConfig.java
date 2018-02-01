@@ -40,6 +40,7 @@ import org.springframework.security.web.authentication.preauth.RequestHeaderAuth
  * </ol>
  * <h1>Spring Securityが具備すべきフィルタと対応するトークン</h1>
  * <table>
+ * <caption>Spring Securityが具備すべきフィルタと対応するトークン</caption>
  * <thead><tr><th>フィルタ内容</th><th>フィルタ名</th><th>トークン名</th><th>適用順序</th></tr></thead>
  * <tbody>
  * <tr><td>リクエストヘッダーのSSO_USERの有無を判断し、ない場合はエラーとするフィルター</td><td>requestHeaderAuthenticationFilter</td><td>AnonymousToken</td><td>1</td></tr>
