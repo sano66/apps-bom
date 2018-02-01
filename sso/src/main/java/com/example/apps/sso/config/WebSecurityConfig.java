@@ -27,22 +27,35 @@ import org.springframework.security.web.authentication.preauth.RequestHeaderAuth
 
 /**
  * Spring Security コンフィグレーションクラス.
- * <p>
- * 引数の型が異なる3つのconfigureメソッドでSpring Securityを定義する.</p>
- * <h2>configure(引数の型WebSecurityクラス)</h2>
- * <ul>
- * <li>Spring Security 適用しないリソースの定義</li>
- * <li>Spring Security デバッグ指示（ログの出力はlogback.xmlで制御可能）</li>
- * </ul>
- * <h2>configure(引数の型HttpSecurityクラス) </h2>
- * <ul>
- * <li>リクエストヘッダーの確認フィルタ定義</li>
- * <li>認証対象のページとアクセスするためのROLEの定義</li>
- * </ul>
- * <h2>configure(引数の型AuthenticationManagerBuilderクラス) </h2>
- * <ul>
- * <li>追加したフィルタが使用するtokenの型に応じた認証プロバイダ定義</li>
- * </ul>
+ * <h1>認証シナリオ</h1>
+ * <ol>
+ * <li>シングルサインオン経由でアクセスするウェブアプリケーションを想定</li>
+ * <li>シングルサインオンはユーザ名、パスワードで認証済の前提</li>
+ * <li>シングルサインオン認証が済んでいる場合はhttpヘッダーにSSO_USERが付与されている</li>
+ * <li>ウェブアプリケーションを利用するにはシングルサインオンの認証とは別に、店識別とSSO_USERで指定したユーザ名による認証が必要</li>
+ * <li>アプリケーションの認証ができなかった場合は、店識別とユーザ名による認証が必要</li>
+ * <li>アプリケーションの認証が未済のとき、店識別をリクエストパラメータで指定した場合は、認証済のSSO_USERとあわせてログイン認証を実施する</li>
+ * <li>店識別とはNYとかPARISとか店が存在する地名を表す任意の文字列</li>
+ * <li>ログイン済のユーザは別の店識別のユーザへ切り替え可能</li>
+ * </ol>
+ * <h1>Spring Securityが具備すべきフィルタと対応するトークン</h1>
+ * <table>
+ * <thead><tr><th>フィルタ内容</th><th>フィルタ名</th><th>トークン名</th><th>適用順序</th></tr></thead>
+ * <tbody>
+ * <tr><td>リクエストヘッダーのSSO_USERの有無を判断し、ない場合はエラーとするフィルター</td><td>requestHeaderAuthenticationFilter</td><td>AnonymousToken</td><td>1</td></tr>
+ * <tr><td>店識別とユーザ名によるフォームログインのフィルター</td><td>MyFormLoginFilter</td><td>MyAuthenticationToken</td><td>3</td></tr>
+ * <tr><td>認証未済の場合、店識別が与えられた場合に認証を行うフィルター</td><td>MyPreAuthenticationFilter</td><td>MyAuthenticationToken</td><td>2</td></tr>
+ * <tr><td>店識別とユーザ名によるユーザ切り替えのフィルター</td><td>MySwitchUserFilter</td><td>MyAuthenticationToken</td><td>4</td></tr>
+ * </tbody>
+ * </table>
+ * <h1>Spring Securityの設定仕様</h1>
+ * <ol>
+ * <li>/assets, /staticはHTMLリソースのため認証対象外</li>
+ * <li>デバッグ機能は利用可能とし、ロギング設定ファイル/src/resources/logback.xmlにより出力を制御する</li>
+ * <li>DB認証のデータソースは認証専用のデータソースを利用する</li>
+ * <li>ログアウトの際、セッションを初期化する</li>
+ * <li>認証エラー、認可エラーに関してエラーページは用意しない</li>
+ * </ol>
  *
  * @author sano
  */
@@ -74,6 +87,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/debug.jsp", "/permit_all.html").permitAll()
                 .anyRequest().authenticated();
+        http.logout()
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID");
     }
 
     /**
