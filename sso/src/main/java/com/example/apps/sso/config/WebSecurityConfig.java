@@ -124,7 +124,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Bean
     WebAuthenticationDetailsSource webAuthenticationDetailsSource() {
-        WebAuthenticationDetailsSource detailsSource = new WebAuthenticationDetailsSource() {
+        return new WebAuthenticationDetailsSource() {
             private final List<GrantedAuthority> authorities
                     = new ArrayList<>(Arrays.asList(new SimpleGrantedAuthority("ANONYMOUS")));
 
@@ -133,6 +133,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 return new PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails(context, authorities);
             }
         };
-        return detailsSource;
     }
 }
