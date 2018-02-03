@@ -9,15 +9,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
@@ -88,6 +96,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/debug.jsp", "/permit_all.html").permitAll()
                 .anyRequest().authenticated();
+        http.formLogin()
+                .permitAll();
         http.logout()
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID");
@@ -102,6 +112,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(preAuthenticatedAuthenticationProvider());
+        auth.userDetailsService(userDetailsService());
     }
 
     /**
@@ -128,7 +139,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Bean
     PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider() {
-        PreAuthenticatedAuthenticationProvider provider = new PreAuthenticatedAuthenticationProvider();
+        PreAuthenticatedAuthenticationProvider provider = new PreAuthenticatedAuthenticationProvider() {
+            @Override
+            public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+                Authentication auth = super.authenticate(authentication);
+                return new AnonymousAuthenticationToken("ANONYMOUS", auth.getPrincipal(), auth.getAuthorities());
+            }
+
+        };
         provider.setPreAuthenticatedUserDetailsService(new PreAuthenticatedGrantedAuthoritiesUserDetailsService());
         return provider;
     }
@@ -150,5 +168,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 return new PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails(context, authorities);
             }
         };
+    }
+
+    @Bean
+    public DataSource dataSource() {
+        return new EmbeddedDatabaseBuilder()
+                .setType(EmbeddedDatabaseType.H2)
+                .setScriptEncoding("UTF-8")
+                .addDefaultScripts()
+                .build();
+    }
+
+    @Override
+    protected UserDetailsService userDetailsService() {
+        JdbcDaoImpl service = new JdbcDaoImpl();
+        service.setDataSource(dataSource());
+        return service;
     }
 }
