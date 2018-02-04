@@ -176,8 +176,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * 
-     * @return DataSource 
+     *
+     * @return DataSource
      */
     @Bean
     private DataSource dataSource() {
