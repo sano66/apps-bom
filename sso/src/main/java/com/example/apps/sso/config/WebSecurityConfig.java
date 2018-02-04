@@ -51,10 +51,15 @@ import org.springframework.security.web.authentication.preauth.RequestHeaderAuth
  * <caption>Spring Securityが具備すべきフィルタと対応するトークン</caption>
  * <thead><tr><th>フィルタ内容</th><th>フィルタ名</th><th>トークン名</th><th>適用順序</th></tr></thead>
  * <tbody>
- * <tr><td>リクエストヘッダーのSSO_USERの有無を判断し、ない場合はエラーとするフィルター</td><td>requestHeaderAuthenticationFilter</td><td>AnonymousToken</td><td>1</td></tr>
- * <tr><td>店識別とユーザ名によるフォームログインのフィルター</td><td>MyFormLoginFilter</td><td>MyAuthenticationToken</td><td>3</td></tr>
- * <tr><td>認証未済の場合、店識別が与えられた場合に認証を行うフィルター</td><td>MyPreAuthenticationFilter</td><td>MyAuthenticationToken</td><td>2</td></tr>
- * <tr><td>店識別とユーザ名によるユーザ切り替えのフィルター</td><td>MySwitchUserFilter</td><td>MyAuthenticationToken</td><td>4</td></tr>
+ * <tr><td>リクエストヘッダーのSSO_USERの有無を判断し、ない場合はエラーとするフィルター</td>
+ * <td>requestHeaderAuthenticationFilter</td>
+ * <td>AnonymousToken</td><td>1</td></tr>
+ * <tr><td>店識別とユーザ名によるフォームログインのフィルター</td>
+ * <td>MyFormLoginFilter</td><td>MyAuthenticationToken</td><td>3</td></tr>
+ * <tr><td>認証未済の場合、店識別が与えられた場合に認証を行うフィルター</td>
+ * <td>MyPreAuthenticationFilter</td><td>MyAuthenticationToken</td><td>2</td></tr>
+ * <tr><td>店識別とユーザ名によるユーザ切り替えのフィルター</td>
+ * <td>MySwitchUserFilter</td><td>MyAuthenticationToken</td><td>4</td></tr>
  * </tbody>
  * </table>
  * <h1>Spring Securityの設定仕様</h1>
@@ -141,7 +146,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider() {
         PreAuthenticatedAuthenticationProvider provider = new PreAuthenticatedAuthenticationProvider() {
             @Override
-            public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+            public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
                 Authentication auth = super.authenticate(authentication);
                 return new AnonymousAuthenticationToken("ANONYMOUS", auth.getPrincipal(), auth.getAuthorities());
             }
@@ -171,7 +176,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public DataSource dataSource() {
+    private DataSource dataSource() {
         return new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
                 .setScriptEncoding("UTF-8")
