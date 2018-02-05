@@ -17,3 +17,17 @@ insert into authorities values('user', 'role_user');
 insert into authorities values('admin', 'role_admin');
 insert into authorities values('app', 'role_app');
 
+INSERT INTO my_branches VALUES('ny','New York', 'USA');
+INSERT INTO my_branches VALUES('paris','Paris', 'France');
+INSERT INTO my_branches VALUES('london','London', 'UK');
+INSERT INTO my_branches VALUES('tokyo','tokyo', 'Japan');
+
+INSERT INTO my_users VALUES('doma','yourname@yourdomain.com','ABC', 'XYX');
+INSERT INTO my_users VALUES('ACID','acid@yourdomain.com','ABC', 'XYX');
+
+INSERT INTO my_signon VALUES('ny', 'doma');
+INSERT INTO my_signon VALUES('paris', 'doma');
+INSERT INTO my_signon VALUES('tokyo', 'ACID');
+INSERT INTO my_signon VALUES('paris', 'ACID');
+INSERT INTO my_signon VALUES('london', 'ACID');
+
