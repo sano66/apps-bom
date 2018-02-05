@@ -79,8 +79,8 @@ public class MyUserDetailsServiceImpl extends JdbcDaoSupport
      * Executes the SQL <tt>usersByUsernameQuery</tt> and returns a list of
      * UserDetails objects. There should normally only be one matching user.
      *
-     * @param args
-     * @return
+     * @param args args
+     * @return List&lt;UserDetails&gt;
      */
     protected List<UserDetails> loadUsersByArgs(String... args) {
         String branchid = args[0];
