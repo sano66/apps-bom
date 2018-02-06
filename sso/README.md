@@ -51,6 +51,16 @@
 1. 上記フィルタで使用するtokenに応じた認証プロバイダの登録
 1. フィルタが設定するtoken.detailはGrantedAuthorityを実装していること
 
+### Step 2 店識別とユーザ名によるフォームログインのフィルターの実装
+
+#### point
+
+1. Configurerでフォームログインフィルタを設定する
+1. MyAuthenticationFilter#attemptAuthentication()で認証未済トークン作成
+1. MyAuthenticationProvider#support()でトークンとプロバイダのひも付け
+1. MyAuthenticationProvider#createSuccessAuthentication()で認証済トークン作成
+1. 複数項目によるloadUserByArgs()を備えるUserDetailsService相当のインターフェースを作成
+
 # 利用規約
 
 誤りがあれば遠慮なくご指摘ください。
