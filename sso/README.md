@@ -55,6 +55,7 @@
 
 #### point
 
+1. PreAuthenticatedAuthenticationProvider#authenticate()でAnonymousTokenを返却させ次のフィルタを有効にさせる
 1. Configurerでフォームログインフィルタを設定する
 1. MyAuthenticationFilter#attemptAuthentication()で認証未済トークン作成
 1. MyAuthenticationProvider#support()でトークンとプロバイダのひも付け
