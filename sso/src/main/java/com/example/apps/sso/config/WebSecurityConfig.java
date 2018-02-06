@@ -20,7 +20,6 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -107,8 +106,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/debug.jsp", "/permit_all.html").permitAll()
                 .anyRequest().authenticated();
-//        http.formLogin()
-//                .permitAll();
         http.logout()
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID");
@@ -123,7 +120,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(preAuthenticatedAuthenticationProvider());
-//        auth.userDetailsService(userDetailsService());
         auth.authenticationProvider(myAuthenticationProvider());
     }
 

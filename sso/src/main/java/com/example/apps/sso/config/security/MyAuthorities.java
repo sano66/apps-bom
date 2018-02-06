@@ -14,4 +14,8 @@ public class MyAuthorities {
     public static final String AUTHORITY_USER = "user";
     public static final String AUTHORITY_ADMIN = "admin";
     public static final String AUTHORITY_MANAGER = "manager";
+    
+    private MyAuthorities() {
+        // NOP
+    }
 }
