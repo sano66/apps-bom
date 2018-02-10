@@ -81,9 +81,9 @@ public class MyUserDetailsServiceImpl extends JdbcDaoSupport
                     String resultBranchname = rs.getString(2);
                     String resultCountry = rs.getString(3);
                     String resultUserid = rs.getString(4);
-                    String resultEmail = rs.getString(4);
-                    String resultFirstname = rs.getString(5);
-                    String resultLastname = rs.getString(6);
+                    String resultEmail = rs.getString(5);
+                    String resultFirstname = rs.getString(6);
+                    String resultLastname = rs.getString(7);
                     MyAccount myAccount = new MyAccount(resultBranchid, resultBranchname, resultCountry,
                             resultUserid, resultEmail, resultFirstname, resultLastname);
                     return new MyUser(myAccount, userid, "no_password", AuthorityUtils.NO_AUTHORITIES);

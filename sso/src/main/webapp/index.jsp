@@ -14,6 +14,14 @@
     </head>
     <body>
         <h2>Hello World!</h2>
+        <sec:authentication property="principal.myAccount.branchid"/>
+        <sec:authentication property="principal.myAccount.branchname"/>
+        <sec:authentication property="principal.myAccount.country"/>
+        <br>
+        <sec:authentication property="principal.myAccount.userid"/>
+        <sec:authentication property="principal.myAccount.email"/>
+        <sec:authentication property="principal.myAccount.firstname"/>
+        <sec:authentication property="principal.myAccount.lastname"/>
         <hr>
         <form action="<c:url value="/logout"/>" method="post">
             <sec:csrfInput/>
@@ -23,8 +31,8 @@
         <h3>Security Debug Information</h3>
 
         <%
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    if (auth != null) {%>
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth != null) {%>
         <p>
             Authentication object is of type: <em><%= auth.getClass().getName()%></em>
         </p>
@@ -34,7 +42,7 @@
 
         Authentication object holds the following granted authorities:<br /><br />
         <%
-    for (GrantedAuthority authority : auth.getAuthorities()) {%>
+            for (GrantedAuthority authority : auth.getAuthorities()) {%>
         <%= authority%> (<em>getAuthority()</em>: <%= authority.getAuthority()%>)<br />
         <%			}
         %>
