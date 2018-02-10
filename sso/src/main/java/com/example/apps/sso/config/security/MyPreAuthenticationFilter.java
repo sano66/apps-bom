@@ -39,7 +39,7 @@ public class MyPreAuthenticationFilter extends AbstractAuthenticationProcessingF
     private static final String EMPTY = "";
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         String branchid = obtainBranchid(request);
         String userid = obtainUserid(request);
