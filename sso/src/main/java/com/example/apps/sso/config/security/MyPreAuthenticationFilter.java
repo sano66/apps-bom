@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -26,7 +25,8 @@ import org.springframework.util.StringUtils;
 public class MyPreAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     /**
-     * 
+     *
+     * @param defaultFilterProcessesUrl defaultFilterProcessesUrl
      */
     public MyPreAuthenticationFilter(final String defaultFilterProcessesUrl) {
         super(new AntPathRequestMatcher(defaultFilterProcessesUrl));
@@ -34,12 +34,12 @@ public class MyPreAuthenticationFilter extends AbstractAuthenticationProcessingF
     }
 
     /**
-     * 
+     *
      */
     private static final String EMPTY = "";
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public Authentication attemptAuthentication(final HttpServletRequest request, final HttpServletResponse response) throws IOException, ServletException {
 
         String branchid = obtainBranchid(request);
         String userid = obtainUserid(request);
@@ -54,7 +54,7 @@ public class MyPreAuthenticationFilter extends AbstractAuthenticationProcessingF
     }
 
     @Override
-    protected boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
+    protected boolean requiresAuthentication(final HttpServletRequest request, final HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null) {
             return false;
@@ -73,14 +73,25 @@ public class MyPreAuthenticationFilter extends AbstractAuthenticationProcessingF
         return !StringUtils.isEmpty(userid);
     }
 
-    private String obtainBranchid(HttpServletRequest request) {
+    /**
+     *
+     * @param request HttpServletRequest
+     * @return String
+     */
+    private String obtainBranchid(final HttpServletRequest request) {
         return request.getParameter("branchid");
     }
 
-    private String obtainUserid(HttpServletRequest request) {
+    /**
+     *
+     * @param request HttpServletRequest
+     * @return String
+     */
+    private String obtainUserid(final HttpServletRequest request) {
         String userid = request.getParameter("userid");
         if (StringUtils.isEmpty(userid)) {
-            AnonymousAuthenticationToken token = (AnonymousAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            AnonymousAuthenticationToken token
+                    = (AnonymousAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
             UserDetails user = (UserDetails) token.getPrincipal();
             userid = user.getUsername();
         }
