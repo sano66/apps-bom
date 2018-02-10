@@ -7,11 +7,14 @@ package com.example.apps.sso.config;
 
 import com.example.apps.sso.config.security.MyAuthenticationProvider;
 import com.example.apps.sso.config.security.MyFormLoginConfigurer;
+import com.example.apps.sso.config.security.MyPreAuthenticationFilter;
 import com.example.apps.sso.config.security.MyUserDetailsService;
 import com.example.apps.sso.config.security.MyUserDetailsServiceImpl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -102,13 +106,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http.addFilter(requestHeaderAuthenticationFilter());
+        http.addFilterAfter(myPreAuthenticationFilter(), RequestHeaderAuthenticationFilter.class);
         http.apply(new MyFormLoginConfigurer<>()).loginPage("/login.jsp").permitAll();
         http.authorizeRequests()
                 .antMatchers("/debug.jsp", "/permit_all.html").permitAll()
                 .anyRequest().authenticated();
         http.logout()
                 .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID");
+                .deleteCookies("JSESSIONID")
+                .permitAll();
     }
 
     /**
@@ -130,7 +136,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * @exception Exception exception
      */
     @Bean
-    RequestHeaderAuthenticationFilter requestHeaderAuthenticationFilter() throws Exception {
+    RequestHeaderAuthenticationFilter requestHeaderAuthenticationFilter() {
         RequestHeaderAuthenticationFilter filter = new RequestHeaderAuthenticationFilter();
         filter.setPrincipalRequestHeader("SSO_USER");
         filter.setAuthenticationDetailsSource(webAuthenticationDetailsSource());
@@ -211,4 +217,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         service.setDataSource(authDataSource());
         return service;
     }
+
+    @Bean
+    MyPreAuthenticationFilter myPreAuthenticationFilter() {
+        MyPreAuthenticationFilter filter = new MyPreAuthenticationFilter("/login.jsp");
+        filter.setAuthenticationManager(authenticationManager());
+        return filter;
+    }
+
+    @Override
+    protected AuthenticationManager authenticationManager() {
+        try {
+            return super.authenticationManager();
+        }
+        catch (Exception ex) {
+            Logger.getLogger(WebSecurityConfig.class.getName()).log(Level.SEVERE, null, ex);
+            throw new IllegalArgumentException(ex);
+        }
+    }
+
 }

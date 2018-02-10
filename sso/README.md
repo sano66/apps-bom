@@ -62,6 +62,15 @@
 1. MyAuthenticationProvider#createSuccessAuthentication()で認証済トークン作成
 1. 複数項目によるloadUserByArgs()を備えるUserDetailsService相当のインターフェースを作成
 
+### Step 3 認証未済の場合、店識別が与えられた場合に認証を行うフィルターの実装
+
+#### point
+
+1. MyPreAuthenticationFilterをフォームログイン前に設定
+1. MyPreAuthenticationFilter#requiresAuthentication()で認証未済の場合の判断
+1. MyPreAuthenticationFilter#attemptAuthentication()でトークン作成
+1. 認証プロバイダはMyAuthenticationProviderを利用
+
 # 利用規約
 
 誤りがあれば遠慮なくご指摘ください。
