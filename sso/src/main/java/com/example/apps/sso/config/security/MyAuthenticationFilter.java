@@ -40,22 +40,13 @@ public class MyAuthenticationFilter extends UsernamePasswordAuthenticationFilter
     /**
      *
      */
-    public static final String MY_SECURITY_FORM_BRANCHID_KEY = "branchid";
-    /**
-     *
-     */
-    public static final String MY_SECURITY_FORM_USERID_KEY = "userid";
-
+    @Setter
+    private String branchidParameter = MyAuthentication.MY_SECURITY_FORM_BRANCHID_KEY;
     /**
      *
      */
     @Setter
-    private String branchidParameter = MY_SECURITY_FORM_BRANCHID_KEY;
-    /**
-     *
-     */
-    @Setter
-    private String useridParameter = MY_SECURITY_FORM_USERID_KEY;
+    private String useridParameter = MyAuthentication.MY_SECURITY_FORM_USERID_KEY;
 
     /**
      *

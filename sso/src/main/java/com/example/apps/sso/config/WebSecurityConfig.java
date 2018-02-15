@@ -89,6 +89,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    /**
+     * 
+     */
+    private static final String LOGIN_PAGE = "/login.jsp";
 
     /**
      * 認証を適用しないリソースの登録およびデバッグの指示.
@@ -112,7 +116,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http.addFilter(requestHeaderAuthenticationFilter());
         http.addFilterAfter(myPreAuthenticationFilter(), RequestHeaderAuthenticationFilter.class);
-        http.apply(new MyFormLoginConfigurer<>()).loginPage("/login.jsp").permitAll();
+        http.apply(new MyFormLoginConfigurer<>()).loginPage(LOGIN_PAGE).permitAll();
         http.addFilter(mySwitchUserFilter());
         http.authorizeRequests()
                 .antMatchers("/debug.jsp", "/permit_all.html").permitAll()
@@ -232,7 +236,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     MyAuthenticationFilter myAuthenticationFilter() {
         MyAuthenticationFilter filter = new MyAuthenticationFilter();
-        filter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login.jsp", "POST"));
+        filter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(LOGIN_PAGE, "POST"));
         filter.setAuthenticationManager(authenticationManager());
         return filter;
     }
@@ -253,7 +257,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     MyPreAuthenticationFilter myPreAuthenticationFilter() {
-        MyPreAuthenticationFilter filter = new MyPreAuthenticationFilter("/login.jsp");
+        MyPreAuthenticationFilter filter = new MyPreAuthenticationFilter(LOGIN_PAGE);
         filter.setAuthenticationManager(authenticationManager());
         return filter;
     }

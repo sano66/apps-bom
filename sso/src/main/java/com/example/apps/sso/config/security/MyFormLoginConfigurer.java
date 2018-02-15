@@ -19,8 +19,8 @@ public final class MyFormLoginConfigurer<H extends HttpSecurityBuilder<H>> exten
 
     public MyFormLoginConfigurer(MyAuthenticationFilter authenticationFilter, String defaultLoginProcessingUrl) {
         super(authenticationFilter, defaultLoginProcessingUrl);
-        branchidParameter("branchid");
-        useridParameter("userid");
+        branchidParameter(MyAuthentication.MY_SECURITY_FORM_BRANCHID_KEY);
+        useridParameter(MyAuthentication.MY_SECURITY_FORM_USERID_KEY);
     }
 
     @Override

@@ -79,7 +79,7 @@ public class MyPreAuthenticationFilter extends AbstractAuthenticationProcessingF
      * @return String
      */
     private String obtainBranchid(final HttpServletRequest request) {
-        return request.getParameter("branchid");
+        return request.getParameter(MyAuthentication.MY_SECURITY_FORM_BRANCHID_KEY);
     }
 
     /**
@@ -88,7 +88,7 @@ public class MyPreAuthenticationFilter extends AbstractAuthenticationProcessingF
      * @return String
      */
     private String obtainUserid(final HttpServletRequest request) {
-        String userid = request.getParameter("userid");
+        String userid = request.getParameter(MyAuthentication.MY_SECURITY_FORM_USERID_KEY);
         if (StringUtils.isEmpty(userid)) {
             AnonymousAuthenticationToken token
                     = (AnonymousAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();

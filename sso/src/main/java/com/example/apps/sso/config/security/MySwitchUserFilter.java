@@ -25,7 +25,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.security.web.authentication.switchuser.AuthenticationSwitchUserEvent;
 import org.springframework.security.web.authentication.switchuser.SwitchUserAuthorityChanger;
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
-import static org.springframework.security.web.authentication.switchuser.SwitchUserFilter.ROLE_PREVIOUS_ADMINISTRATOR;
 import org.springframework.security.web.authentication.switchuser.SwitchUserGrantedAuthority;
 import org.springframework.util.StringUtils;
 
@@ -49,28 +48,20 @@ public class MySwitchUserFilter extends SwitchUserFilter {
     private String switchAuthorityRole = SwitchUserFilter.ROLE_PREVIOUS_ADMINISTRATOR;
     @Setter
     private SwitchUserAuthorityChanger switchUserAuthorityChanger;
-    /**
-     *
-     */
-    public static final String MY_SECURITY_FORM_BRANCHID_KEY = "branchid";
-    /**
-     *
-     */
-    public static final String MY_SECURITY_FORM_USERID_KEY = "userid";
 
     /**
      *
      */
     @Setter
-    private String branchidParameter = MY_SECURITY_FORM_BRANCHID_KEY;
+    private String branchidParameter = MyAuthentication.MY_SECURITY_FORM_BRANCHID_KEY;
     /**
      *
      */
     @Setter
-    private String useridParameter = MY_SECURITY_FORM_USERID_KEY;
+    private String useridParameter = MyAuthentication.MY_SECURITY_FORM_USERID_KEY;
 
     @Override
-    protected Authentication attemptSwitchUser(HttpServletRequest request) throws AuthenticationException {
+    protected Authentication attemptSwitchUser(final HttpServletRequest request) throws AuthenticationException {
         MyAuthenticationToken targetUserRequest;
 
         String branchid = obtainBranchid(request);
@@ -104,7 +95,7 @@ public class MySwitchUserFilter extends SwitchUserFilter {
     }
 
     private MyAuthenticationToken createSwitchUserToken(
-            HttpServletRequest request, UserDetails targetUser) {
+            final HttpServletRequest request, final UserDetails targetUser) {
 
         MyAuthenticationToken targetUserRequest;
 
@@ -133,7 +124,7 @@ public class MySwitchUserFilter extends SwitchUserFilter {
         }
 
         // add the new switch user authority
-        List<GrantedAuthority> newAuths = new ArrayList<GrantedAuthority>(orig);
+        List<GrantedAuthority> newAuths = new ArrayList<>(orig);
         newAuths.add(switchAuthority);
 
         // create the new authentication token
