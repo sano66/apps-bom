@@ -12,10 +12,14 @@ insert into users values('user','password',true);
 insert into users values('admin','password',true);
 insert into users values('app','password',true);
 insert into users values('system','password',true);
+insert into users values('doma','password',true);
+insert into users values('ACID','password',true);
 
 insert into authorities values('user', 'role_user');
 insert into authorities values('admin', 'role_admin');
 insert into authorities values('app', 'role_app');
+insert into authorities values('doma', 'role_app');
+insert into authorities values('ACID', 'role_app');
 
 INSERT INTO my_branches VALUES('ny','New York', 'USA');
 INSERT INTO my_branches VALUES('paris','Paris', 'France');

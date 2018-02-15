@@ -71,6 +71,14 @@
 1. MyPreAuthenticationFilter#attemptAuthentication()でトークン作成
 1. 認証プロバイダはMyAuthenticationProviderを利用
 
+### Step 4 店識別とユーザ名によるユーザ切り替えのフィルターの実装
+
+#### point
+
+1. SwitchUserFilterをextendしてMySwitchUserFilterを作成
+1. 認証のUserDetailsServiceはダミーを設定し、複数項目による認証サービスMyUserDetailsServiceをimplementする。
+1. 認証プロバイダはMyAuthenticationProviderを利用
+
 # 利用規約
 
 誤りがあれば遠慮なくご指摘ください。

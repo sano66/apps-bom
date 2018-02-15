@@ -2,6 +2,7 @@
 <%@page import="org.springframework.security.core.GrantedAuthority"%>
 <%@page import="org.springframework.security.core.context.SecurityContextHolder"%>
 <%@page import="org.springframework.security.core.Authentication"%>
+<%@page import="org.springframework.security.web.authentication.switchuser.SwitchUserFilter"%>
 <%@page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -14,19 +15,28 @@
     </head>
     <body>
         <h2>Hello World!</h2>
-        <sec:authentication property="principal.myAccount.branchid"/>
-        <sec:authentication property="principal.myAccount.branchname"/>
-        <sec:authentication property="principal.myAccount.country"/>
-        <br>
-        <sec:authentication property="principal.myAccount.userid"/>
-        <sec:authentication property="principal.myAccount.email"/>
-        <sec:authentication property="principal.myAccount.firstname"/>
-        <sec:authentication property="principal.myAccount.lastname"/>
-        <hr>
-        <form action="<c:url value="/logout"/>" method="post">
-            <sec:csrfInput/>
-            <button>logout</button>
-        </form>
+        <sec:authorize access="isAuthenticated()">
+            <sec:authentication property="principal.username"/>
+            <hr/>
+            <form action="<c:url value="/logout"/>" method="post">
+                <sec:csrfInput/>
+                <button>logout</button>
+            </form>
+            <hr/>
+            <form action="<c:url value="/login/impersonate"/>" method="post">
+                <sec:csrfInput/>
+                <input name='branchid'/>
+                <input name='userid'/>
+                <button>switch user</button>
+            </form>
+        </sec:authorize>
+        <sec:authorize access="hasRole('ROLE_PREVIOUS_ADMINISTRATOR')">
+            <hr/>
+            <form action="<c:url value="/logout/impersonate"/>" method="post">
+                <sec:csrfInput/>
+                <button>exit switch user</button>
+            </form>
+        </sec:authorize>
         <hr/>
         <h3>Security Debug Information</h3>
 

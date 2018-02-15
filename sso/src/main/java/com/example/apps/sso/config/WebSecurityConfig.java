@@ -5,9 +5,11 @@
  */
 package com.example.apps.sso.config;
 
+import com.example.apps.sso.config.security.MyAuthenticationFilter;
 import com.example.apps.sso.config.security.MyAuthenticationProvider;
 import com.example.apps.sso.config.security.MyFormLoginConfigurer;
 import com.example.apps.sso.config.security.MyPreAuthenticationFilter;
+import com.example.apps.sso.config.security.MySwitchUserFilter;
 import com.example.apps.sso.config.security.MyUserDetailsService;
 import com.example.apps.sso.config.security.MyUserDetailsServiceImpl;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -40,6 +43,8 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedGrantedAuthoritiesUserDetailsService;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails;
 import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
+import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * Spring Security コンフィグレーションクラス.
@@ -108,9 +113,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilter(requestHeaderAuthenticationFilter());
         http.addFilterAfter(myPreAuthenticationFilter(), RequestHeaderAuthenticationFilter.class);
         http.apply(new MyFormLoginConfigurer<>()).loginPage("/login.jsp").permitAll();
+        http.addFilter(mySwitchUserFilter());
         http.authorizeRequests()
                 .antMatchers("/debug.jsp", "/permit_all.html").permitAll()
                 .anyRequest().authenticated();
+//        http.formLogin().permitAll();
         http.logout()
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
@@ -125,8 +132,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(daoAuthenticationProvider());
         auth.authenticationProvider(preAuthenticatedAuthenticationProvider());
         auth.authenticationProvider(myAuthenticationProvider());
+    }
+
+    @Bean
+    MySwitchUserFilter mySwitchUserFilter() {
+        MySwitchUserFilter filter = new MySwitchUserFilter();
+        filter.setUserDetailsService(userDetailsService()); // dummy
+        filter.setMyUserDetailsService(myUserDetailsService());
+        filter.setTargetUrl("/");
+        filter.setSwitchFailureUrl("/switchuser.jsp");
+        return filter;
+    }
+
+    @Bean
+    DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService());
+        return provider;
     }
 
     /**
@@ -202,6 +227,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         JdbcDaoImpl service = new JdbcDaoImpl();
         service.setDataSource(authDataSource());
         return service;
+    }
+
+    @Bean
+    MyAuthenticationFilter myAuthenticationFilter() {
+        MyAuthenticationFilter filter = new MyAuthenticationFilter();
+        filter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login.jsp", "POST"));
+        filter.setAuthenticationManager(authenticationManager());
+        return filter;
     }
 
     @Bean
